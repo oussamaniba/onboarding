@@ -4,13 +4,15 @@ import 'package:onboarding/utils/globals.dart';
 
 class MainController extends GetxController {
   RxInt position = 0.obs;
-  updatePosition(int i) {
+  updatePosition(int i, bool apply) {
     position.value = i;
-    pageController.animateToPage(
-      i,
-      duration: const Duration(milliseconds: 250),
-      curve: Curves.bounceInOut,
-    );
+    if (apply) {
+      pageController.animateToPage(
+        i,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeIn,
+      );
+    }
     update();
   }
 }

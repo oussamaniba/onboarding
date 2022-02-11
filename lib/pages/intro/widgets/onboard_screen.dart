@@ -20,18 +20,18 @@ class OnBoardScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text(
-            'Create an account',
-            style: GoogleFonts.roboto(
-              color: Colors.grey,
+            'Create an account'.toUpperCase(),
+            style: GoogleFonts.fjallaOne(
+              color: Colors.blue[900],
               fontSize: 15.0,
               fontWeight: FontWeight.bold,
-              letterSpacing: 1.0,
             ),
           ),
+          const SizedBox(height: 10),
           Text(
             screen['title'],
-            style: GoogleFonts.bebasNeue(
-              color: Colors.deepPurple,
+            style: GoogleFonts.fjallaOne(
+              color: Colors.blue[900],
               fontSize: 30.0,
               fontWeight: FontWeight.bold,
               letterSpacing: 1.0,
@@ -42,11 +42,25 @@ class OnBoardScreen extends StatelessWidget {
             margin: const EdgeInsets.only(top: 20),
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-                image: DecorationImage(
-              fit: BoxFit.fill,
-              image: AssetImage(screen['img']),
-            )),
-          )
+              image: DecorationImage(
+                image: AssetImage(
+                  screen['img'],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              screen['msg'],
+              textAlign: TextAlign.center,
+              style: GoogleFonts.fjallaOne(
+                color: Colors.blue[900],
+                fontSize: 15.0,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.0,
+              ),
+            ),
+          ),
         ],
       ),
     );
