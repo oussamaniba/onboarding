@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:onboarding/main/main_controller.dart';
 
-class SignInPage extends StatelessWidget {
+class SignInPage extends GetView<MainController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,8 +32,29 @@ class SignInPage extends StatelessWidget {
               ),
             ),
           ),
-          _SignInForm(
-            onSign: () {},
+          GetBuilder<MainController>(
+            builder: (controller) {
+              return _SignInForm(
+                isSign: controller.isSignin.value,
+                onSign: (username, password) async {
+                  if (username.isEmpty || password.isEmpty) {
+                    const GetSnackBar(
+                      duration: Duration(seconds: 3),
+                      title: 'Account',
+                      message: 'Please type your username & password',
+                    ).show();
+                    return;
+                  }
+                  Map d = await controller.signIn(username, password);
+
+                  GetSnackBar(
+                    duration: const Duration(seconds: 3),
+                    title: 'Account',
+                    message: d['reason'],
+                  ).show();
+                },
+              );
+            },
           ),
         ],
       ),
@@ -39,12 +62,25 @@ class SignInPage extends StatelessWidget {
   }
 }
 
-class _SignInForm extends StatelessWidget {
-  Function() onSign;
+class _SignInForm extends StatefulWidget {
+  bool isSign;
+  Function(String username, String password) onSign;
 
   _SignInForm({
+    required this.isSign,
     required this.onSign,
   });
+
+  @override
+  State<_SignInForm> createState() => _SignInFormState();
+}
+
+class _SignInFormState extends State<_SignInForm> {
+  FocusNode usernode = FocusNode();
+  FocusNode passnode = FocusNode();
+
+  TextEditingController user = TextEditingController();
+  TextEditingController pass = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +91,8 @@ class _SignInForm extends StatelessWidget {
       child: Column(
         children: [
           TextFormField(
+            controller: user,
+            focusNode: usernode,
             decoration: InputDecoration(
               hintText: 'Username',
               alignLabelWithHint: true,
@@ -78,6 +116,11 @@ class _SignInForm extends StatelessWidget {
             ),
           ),
           TextFormField(
+            controller: pass,
+            focusNode: passnode,
+            obscureText: true,
+            enableSuggestions: false,
+            autocorrect: false,
             decoration: InputDecoration(
               hintText: '*******',
               alignLabelWithHint: true,
@@ -148,23 +191,37 @@ class _SignInForm extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 40),
-          SizedBox(
-            height: 50,
-            width: MediaQuery.of(context).size.width,
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.blue[900]),
-              ),
-              child: const Text(
-                'LOGIN',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+          !widget.isSign
+              ? SizedBox(
+                  height: 50,
+                  width: MediaQuery.of(context).size.width,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      usernode.unfocus();
+                      passnode.unfocus();
+                      widget.onSign(user.text, pass.text);
+                    },
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all(Colors.blue[900]),
+                    ),
+                    child: const Text(
+                      'LOGIN',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                )
+              : const SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: CircularProgressIndicator(
+                    color: Colors.blueAccent,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                  ),
                 ),
-              ),
-            ),
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

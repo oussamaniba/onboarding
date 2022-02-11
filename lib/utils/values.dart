@@ -15,3 +15,16 @@ List<Map<String, dynamic>> onboardScreen = [
     'msg': 'Users will be able to go live, chat and meet people nearby',
   }
 ];
+
+List<Map<String, dynamic>> users = [
+  {
+    'username': 'muser',
+    'password': 'mpassw0rd',
+    'status': true,
+  },
+  {
+    'username': 'muser02',
+    'password': 'mpassword',
+    'status': false,
+  }
+];
